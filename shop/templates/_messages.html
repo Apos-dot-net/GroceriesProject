@@ -1,9 +1,69 @@
-{% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-        <div class=flashes>
+{#{% with messages = get_flashed_messages(with_categories=true) %}#}
+{#    {% if messages %}#}
+{#        <div class=flashes>#}
+{#            {% for category, message in messages %}#}
+{#                <div class=" alert alert-{{ category }}">{{ message }}</div>#}
+{#            {% endfor %}#}
+{#        </div>#}
+{#    {% endif %}#}
+{#{% endwith %}#}
+
+<!-- Include SweetAlert2 CSS -->
+{#<link rel="stylesheet" href="/static/assets/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">#}
+
+<!-- Your existing HTML content -->
+{#<div class="card card-success card-outline">#}
+{#    <div class="card-header">#}
+{#        <h3 class="card-title">#}
+{#            <i class="fas fa-edit"></i>#}
+{#            SweetAlert2 Examples#}
+{#        </h3>#}
+{#    </div>#}
+{#    <div class="card-body">#}
+{#        <button type="button" class="btn btn-success swalDefaultSuccess">#}
+{#            Launch Success Toast#}
+{#        </button>#}
+{#        <button type="button" class="btn btn-info swalDefaultInfo">#}
+{#            Launch Info Toast#}
+{#        </button>#}
+{#        <button type="button" class="btn btn-danger swalDefaultError">#}
+{#            Launch Error Toast#}
+{#        </button>#}
+{#        <button type="button" class="btn btn-warning swalDefaultWarning">#}
+{#            Launch Warning Toast#}
+{#        </button>#}
+{#        <button type="button" class="btn btn-default swalDefaultQuestion">#}
+{#            Launch Question Toast#}
+{#        </button>#}
+{#        <div class="text-muted mt-3">#}
+{#            For more examples look at <a href="https://sweetalert2.github.io/">https://sweetalert2.github.io/</a>#}
+{#        </div>#}
+{#    </div>#}
+{#    <!-- /.card -->#}
+{#</div>#}
+
+<!-- Include SweetAlert2 JavaScript -->
+<script src="sweetalert2.all.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    // Function to show SweetAlert2 messages
+    function showSweetAlert(category, message) {
+        Swal.fire({
+            icon: category,
+            title: message,
+            showConfirmButton: false,
+            timer: 3000 // Display for 3 seconds
+        });
+    }
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
             {% for category, message in messages %}
-                <div class=" alert alert-{{ category }}">{{ message }}</div>
+                showSweetAlert('{{ category }}', '{{ message }}');
             {% endfor %}
-        </div>
-    {% endif %}
-{% endwith %}
+        {% endif %}
+    {% endwith %}
+
+</script>
+

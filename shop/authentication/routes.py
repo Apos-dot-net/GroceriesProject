@@ -81,7 +81,7 @@ def login(user_type):
             flash("Successfully Logged in", 'success')
             next_url = request.args.get('next')
             return redirect(next_url or url_for(success_redirect))
-        flash("Incorrect email or password")
+        flash("Incorrect email or password", 'error')
         return redirect(url_for('login', user_type=user_type))
 
     if not current_user.is_authenticated:

@@ -23,7 +23,7 @@ def get_entities_with_products(entity_type):
 @app.route('/')
 def home():
     page = request.args.get('page', 1, type=int)
-    products = Product.query.filter(Product.stock > 0).paginate(page=page, per_page=4)
+    products = Product.query.filter(Product.stock > 0).paginate(page=page, per_page=16)
     return render_template('products/index.html', title="Store Home", products=products,
                            brands=get_entities_with_products('brand'),
                            categories=get_entities_with_products('category'))
@@ -45,12 +45,12 @@ def get_entity(entity, entity_id):
     if entity == 'brand':
         get_entity_obj = Brand.query.filter_by(id=entity_id).first_or_404()
         entity_name = Brand.query.get(entity_id).name
-        entity_products = Product.query.filter_by(brand=get_entity_obj).paginate(page=page, per_page=4)
+        entity_products = Product.query.filter_by(brand=get_entity_obj).paginate(page=page, per_page=16)
         entity_var = 'brand'
     elif entity == 'category':
         get_entity_obj = Category.query.filter_by(id=entity_id).first_or_404()
         entity_name = Category.query.get(entity_id).name
-        entity_products = Product.query.filter_by(category=get_entity_obj).paginate(page=page, per_page=4)
+        entity_products = Product.query.filter_by(category=get_entity_obj).paginate(page=page, per_page=16)
         entity_var = 'category'
     else:
         flash('Invalid entity', 'warning')

@@ -2,6 +2,7 @@
 
 {% block body_block %}
     {% include 'navbar.html' %}
+    {% include '_messages.html' %}
     <style>
         img {
             display: block;
@@ -16,7 +17,6 @@
     </style>
 
     <div class="container mt-2">
-        {% include '_messages.html' %}
         <h1 class="mt-3 text-center">Cart</h1>
         <h5 class="mt-2 p-2 text-left">Here are the items that you added to
             Cart, <strong>{{ current_user.username }}</strong>
