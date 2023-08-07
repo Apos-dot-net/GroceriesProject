@@ -1,0 +1,144 @@
+from flask import redirect, render_template, session, url_for, flash, request
+from flask_login import login_required, current_user
+
+from shop import app, db
+from shop.checkout import Purchase
+from shop.products.models import Product
+from shop.products.routes import get_entities_with_products
+
+
+def merge_dict(dict1, dict2):
+    if isinstance(dict1, list) and isinstance(dict2, list):
+        return dict1 + dict2
+    elif isinstance(dict1, dict) and isinstance(dict2, dict):
+        return dict(list(dict1.items()) + list(dict2.items()))
+    return False
+
+
+@app.route('/add-cart', methods=["POST"])
+def add_cart():
+    try:
+        product_id = request.form.get('product_id')
+        quantity = request.form.get('quantity')
+        product = Product.query.filter_by(id=product_id).first()
+        if request.method == "POST" and product_id and quantity:
+            dict_items = {product_id: {"name": product.name, "category": int(product.category.id),
+                                       'price': int(product.price), 'quantity': int(quantity),
+                                       'image': product.image_1, 'stock': int(product.stock)}}
+            if 'shopcart' in session:
+                print(session['shopcart'])
+                if product_id in session['shopcart']:
+                    for key, item in session['shopcart'].items():
+                        if int(key) == int(product_id):
+                            session.modified = True
+                            item['quantity'] += 1
+                    print("This product is already in your Cart")
+                else:
+                    session['shopcart'] = merge_dict(session['shopcart'], dict_items)
+            else:
+                session['shopcart'] = dict_items
+                return redirect(request.referrer)
+    except Exception as e:
+        print(e)
+    finally:
+        return redirect(request.referrer)
+
+
+@app.route('/cart')
+def get_cart():
+    if 'shopcart' not in session:
+        return redirect(request.referrer)
+    total_without_tax = 0
+    for key, product in session['shopcart'].items():
+        total_without_tax += product['price'] * int(product['quantity'])
+    session['total_without_tax'] = total_without_tax
+    return render_template('Checkout/cart.html', title="Your Cart",
+                           total_without_tax=total_without_tax,
+                           brands=get_entities_with_products('brand'),
+                           categories=get_entities_with_products('category'))
+
+
+@app.route('/empty')
+@login_required
+def empty_cart():
+    try:
+        session.clear()
+        return redirect(url_for('home'))
+    except Exception as e:
+        print(e)
+
+
+@app.route('/update-cart/<int:code>', methods=["POST"])
+@login_required
+def updatecart(code):
+    if 'shopcart' not in session and len(session['shopcart']) <= 0:
+        return redirect(url_for('home'))
+    if request.method == "POST":
+        quantity = request.form.get('quantity')
+        try:
+            session.modified = True
+            for key, item in session['shopcart'].items():
+                if int(key) == code:
+                    item['quantity'] = quantity
+                    flash('Item Updated', 'success')
+                    return redirect(url_for('get_cart'))
+        except Exception as e:
+            print(e)
+            return redirect(url_for('get_cart'))
+
+
+@app.route('/delete-item/<int:item_id>')
+@login_required
+def deleteitem(item_id):
+    if 'shopcart' not in session or len(session['shopcart']) <= 0:
+        return redirect(url_for('home'))
+    try:
+        session.modified = True
+        for key, item in session['shopcart'].items():
+            if int(key) == item_id:
+                session['shopcart'].pop(key, None)
+                return redirect(url_for('get_cart'))
+    except Exception as e:
+        print(e)
+        return redirect(url_for('getcart'))
+
+
+@app.route('/clear-cart')
+@login_required
+def clearcart():
+    try:
+        session.pop('shopcart', None)
+        return redirect(url_for('home'))
+    except Exception as e:
+        print(e)
+
+
+@app.route('/checkout', methods=["POST"])
+@login_required
+def checkout():
+    if 'shopcart' not in session:
+        return redirect(request.referrer)
+    if request.method == "POST":
+        for key, product in session['shopcart'].items():
+            purchase = Purchase(
+                user_id=current_user.id,
+                product_id=key,
+                quantity=product['quantity'],
+                category_id=product['category']
+            )
+            print(purchase)
+            db.session.add(purchase)
+
+        db.session.commit()
+
+    clearcart()
+    return redirect("/")
+
+
+@app.route('/confirm_checkout', methods=['GET', 'POST'])
+@login_required
+def confirm_checkout():
+    total_without_tax = 0  # Calculate the total without tax (you can retrieve this value from your existing logic)
+
+    return render_template('Checkout/confirm_checkout.html', current_user=current_user,
+                           total_without_tax=total_without_tax)
