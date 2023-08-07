@@ -10,9 +10,9 @@ class Product(db.Model):
     stock = db.Column(db.Integer, nullable=False)
     desc = db.Column(db.Text, nullable=False)
     pub_date = db.Column(db.DateTime, nullable=False, default=datetime.now())
-    brand_id = db.Column(db.Integer, db.ForeignKey('brand.id'), nullable=False)
+    brand_id = db.Column(db.Integer, db.ForeignKey('brand.id', ondelete="CASCADE"), nullable=False)
     brand = db.relationship('Brand', backref=db.backref('brand', lazy=True))
-    category_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=False)
+    category_id = db.Column(db.Integer, db.ForeignKey('category.id', ondelete="CASCADE"), nullable=False)
     category = db.relationship('Category', backref=db.backref('category', lazy=True))
 
     image_1 = db.Column(db.String(256), nullable=False, default='image1.jpg')

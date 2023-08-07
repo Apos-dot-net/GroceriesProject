@@ -85,7 +85,7 @@ def add_entity(entity):
         flash(f'The {entity.capitalize()} {entity_name} was added to the database.', 'success')
         return redirect(url_for('add_entity', entity=entity))
 
-    return render_template('products/add_brand.html', title=f'Add {entity.capitalize()}')
+    return render_template('products/add_brand.html', title=f'Add {entity.capitalize()}', entity=entity)
 
 
 @app.route('/add/product', methods=["GET", "POST"])

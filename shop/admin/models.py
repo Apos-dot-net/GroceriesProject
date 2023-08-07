@@ -24,13 +24,13 @@ class StockReplenishment(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
 
-    user_id = db.Column(db.Integer, db.ForeignKey(User.id), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey(User.id, ondelete="CASCADE"), nullable=False)
     user = db.relationship(User, backref=db.backref('replenishments', lazy=True))
 
-    product_id = db.Column(db.Integer, db.ForeignKey(Product.id), nullable=False)
+    product_id = db.Column(db.Integer, db.ForeignKey(Product.id, ondelete="CASCADE"), nullable=False)
     product = db.relationship(Product, backref=db.backref('replenishments', lazy=True))
 
-    category_id = db.Column(db.Integer, db.ForeignKey(Category.id), nullable=False)
+    category_id = db.Column(db.Integer, db.ForeignKey(Category.id, ondelete="CASCADE"), nullable=False)
     category = db.relationship(Category, backref=db.backref('replenishments', lazy=True))
 
     quantity = db.Column(db.Integer, nullable=False)
