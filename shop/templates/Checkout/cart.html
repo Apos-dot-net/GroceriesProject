@@ -37,7 +37,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    {% for key, product in session['shopcart'].items() %}
+                    {% for key, product in session['shop_cart'].items() %}
                         <tr>
                             <td>{{ loop.index }}</td>
                             <td>
@@ -48,7 +48,7 @@
                             </td>
                             <td>{{ product['name'] }}</td>
                             <td>{{ product['price'] }}</td>
-                            <form class="form-group" method="POST" action="{{ url_for('updatecart', code=key) }}">
+                            <form class="form-group" method="POST" action="{{ url_for('update_cart', code=key) }}">
                                 <td>
                                     <input class="form-control p-2" type="number" name="quantity" min="1"
                                            max="{{ product['stock'] }}" value="{{ product['quantity'] }}">
@@ -58,7 +58,7 @@
                                     <button type="submit" class='btn btn-info btn-sm'>Update</button>
                                 </td>
                             </form>
-                            <td><a href='{{ url_for("deleteitem", item_id=key) }}'
+                            <td><a href='{{ url_for("delete_item", item_id=key) }}'
                                    class='btn btn-danger btn-sm'>Delete</a>
                             </td>
                         </tr>
@@ -74,7 +74,7 @@
                 <button type="submit" class="btn btn-success">Checkout</button>
             </form>
             <hr>
-            <a href="{{ url_for('clearcart') }}" class="btn btn-secondary">Clear Cart</a>
+            <a href="{{ url_for('clear_cart') }}" class="btn btn-secondary">Clear Cart</a>
         </div>
     </div>
 {% endblock body_block %}

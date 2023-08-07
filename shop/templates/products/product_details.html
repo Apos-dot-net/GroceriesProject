@@ -13,16 +13,8 @@
                 <hr>
                 <h5>By: {{ product.brand.name }}</h5>
                 <p>Price: {{ product.price }}</p>
-                <strong>Desciption:</strong>
+                <strong>Description:</strong>
                 <p>{{ product.desc }}</p>
-                <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Sed, incidunt. Quidem minus fugiat magnam
-                    nihil. Accusantium totam cum quasi, atque excepturi asperiores illo minima nostrum fuga iste.
-                    Aliquid nostrum provident veritatis nesciunt dignissimos neque impedit? Odit commodi quis eum
-                    voluptatum quisquam veritatis autem quaerat modi officiis harum, dolorem, illo quod, vel quasi dolor
-                    quas. Alias adipisci doloremque ex pariatur dolorum sed at placeat tempora modi, eligendi magni,
-                    impedit id, perspiciatis ipsum nesciunt fugit inventore sapiente maiores eveniet culpa repellendus
-                    illum debitis voluptatum? Iure quaerat provident ullam, facilis repellat, non sed atque commodi
-                    ipsam, quia inventore! Dignissimos amet repellat expedita repudiandae.</p>
                 <hr>
                 <form action="{{ url_for('add_cart') }}" method="post">
                     <input type="hidden" name="product_id" value="{{ product.id }}">
