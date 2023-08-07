@@ -130,7 +130,10 @@ def checkout():
             db.session.add(purchase)
 
         db.session.commit()
+    else:
+        flash("An unexpected Error occurred", "error")
 
+    flash("Your order Has been placed", "success")
     clear_cart()
     return redirect("/")
 
