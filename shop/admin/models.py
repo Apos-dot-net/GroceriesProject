@@ -2,13 +2,14 @@ from datetime import datetime
 
 from flask_login import UserMixin
 from sqlalchemy import event
+from sqlalchemy.dialects.mysql import INTEGER
 
 from shop import db, app
 from shop.products import Product, Category
 
 
 class User(db.Model, UserMixin):
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(INTEGER(unsigned=True), primary_key=True)
     name = db.Column(db.String(80), unique=True, nullable=False)
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
@@ -22,18 +23,18 @@ class User(db.Model, UserMixin):
 class StockReplenishment(db.Model):
     __tablename__ = 'replenishments'
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(INTEGER(unsigned=True), primary_key=True)
 
-    user_id = db.Column(db.Integer, db.ForeignKey(User.id, ondelete="CASCADE"), nullable=False)
+    user_id = db.Column(INTEGER(unsigned=True), db.ForeignKey(User.id, ondelete="CASCADE"), nullable=False)
     user = db.relationship(User, backref=db.backref('replenishments', lazy=True))
 
-    product_id = db.Column(db.Integer, db.ForeignKey(Product.id, ondelete="CASCADE"), nullable=False)
+    product_id = db.Column(INTEGER(unsigned=True), db.ForeignKey(Product.id, ondelete="CASCADE"), nullable=False)
     product = db.relationship(Product, backref=db.backref('replenishments', lazy=True))
 
-    category_id = db.Column(db.Integer, db.ForeignKey(Category.id, ondelete="CASCADE"), nullable=False)
+    category_id = db.Column(INTEGER(unsigned=True), db.ForeignKey(Category.id, ondelete="CASCADE"), nullable=False)
     category = db.relationship(Category, backref=db.backref('replenishments', lazy=True))
 
-    quantity = db.Column(db.Integer, nullable=False)
+    quantity = db.Column(INTEGER(unsigned=True), nullable=False)
     replenishment_date = db.Column(db.DateTime, nullable=False, default=datetime.now())
 
     def __repr__(self):

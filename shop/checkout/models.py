@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from sqlalchemy import event
+from sqlalchemy.dialects.mysql import INTEGER
 
 from shop import db, app
 from shop.customers import RegisterModel
@@ -10,18 +11,18 @@ from shop.products import Product
 class Purchase(db.Model):
     __tablename__ = 'purchases'
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(INTEGER(unsigned=True), primary_key=True)
 
-    user_id = db.Column(db.Integer, db.ForeignKey(RegisterModel.id, ondelete="CASCADE"), nullable=False)
+    user_id = db.Column(INTEGER(unsigned=True), db.ForeignKey(RegisterModel.id, ondelete="CASCADE"), nullable=False)
     user = db.relationship(RegisterModel, backref=db.backref('purchases', lazy=True))
 
-    product_id = db.Column(db.Integer, db.ForeignKey(Product.id, ondelete="CASCADE"), nullable=False)
+    product_id = db.Column(INTEGER(unsigned=True), db.ForeignKey(Product.id, ondelete="CASCADE"), nullable=False)
     product = db.relationship(Product, backref=db.backref('purchases', lazy=True))
 
-    quantity = db.Column(db.Integer, nullable=False, default=1)
+    quantity = db.Column(INTEGER(unsigned=True), nullable=False, default=1)
     purchase_date = db.Column(db.DateTime, nullable=False, default=datetime.now())
 
-    category_id = db.Column(db.Integer, db.ForeignKey('category.id', ondelete="CASCADE"), nullable=False)
+    category_id = db.Column(INTEGER(unsigned=True), db.ForeignKey('category.id', ondelete="CASCADE"), nullable=False)
     category = db.relationship('Category', backref=db.backref('purchases', lazy=True))
 
     def __repr__(self):

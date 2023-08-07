@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from flask_login import user_logged_in, user_logged_out
+from sqlalchemy.dialects.mysql import INTEGER
 
 from shop import db, app
 from shop.admin import User
@@ -10,8 +11,8 @@ from shop.admin import User
 class LoginTracker(db.Model):
     __tablename__ = 'login_tracker'
 
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, nullable=False)
+    id = db.Column(INTEGER(unsigned=True), primary_key=True)
+    user_id = db.Column(INTEGER(unsigned=True), nullable=False)
     user_type = db.Column(db.String(20), nullable=False)
     login_time = db.Column(db.DateTime, nullable=False, default=datetime.now())
 
@@ -29,8 +30,8 @@ class LoginTracker(db.Model):
 class LogoutTracker(db.Model):
     __tablename__ = 'logout_tracker'
 
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, nullable=False)
+    id = db.Column(INTEGER(unsigned=True), primary_key=True)
+    user_id = db.Column(INTEGER(unsigned=True), nullable=False)
     user_type = db.Column(db.String(20), nullable=False)
     logout_time = db.Column(db.DateTime, nullable=False, default=datetime.now())
 

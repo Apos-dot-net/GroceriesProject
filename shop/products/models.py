@@ -1,18 +1,20 @@
 from datetime import datetime
 
+from sqlalchemy.dialects.mysql import INTEGER, FLOAT
+
 from shop import db, app
 
 
 class Product(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(INTEGER(unsigned=True), primary_key=True)
     name = db.Column(db.String(80), nullable=False)
-    price = db.Column(db.Numeric(10, 2), nullable=False)
-    stock = db.Column(db.Integer, nullable=False)
+    price = db.Column(FLOAT(unsigned=True), nullable=False)
+    stock = db.Column(INTEGER(unsigned=True), nullable=False)
     desc = db.Column(db.Text, nullable=False)
     pub_date = db.Column(db.DateTime, nullable=False, default=datetime.now())
-    brand_id = db.Column(db.Integer, db.ForeignKey('brand.id', ondelete="CASCADE"), nullable=False)
+    brand_id = db.Column(INTEGER(unsigned=True), db.ForeignKey('brand.id', ondelete="CASCADE"), nullable=False)
     brand = db.relationship('Brand', backref=db.backref('brand', lazy=True))
-    category_id = db.Column(db.Integer, db.ForeignKey('category.id', ondelete="CASCADE"), nullable=False)
+    category_id = db.Column(INTEGER(unsigned=True), db.ForeignKey('category.id', ondelete="CASCADE"), nullable=False)
     category = db.relationship('Category', backref=db.backref('category', lazy=True))
 
     image_1 = db.Column(db.String(256), nullable=False, default='image1.jpg')
@@ -22,12 +24,12 @@ class Product(db.Model):
 
 
 class Brand(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(INTEGER(unsigned=True), primary_key=True)
     name = db.Column(db.String(64), nullable=False, unique=True)
 
 
 class Category(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(INTEGER(unsigned=True), primary_key=True)
     name = db.Column(db.String(64), nullable=False, unique=True)
 
 

@@ -1,12 +1,13 @@
 from datetime import datetime
 
 from flask_login import UserMixin
+from sqlalchemy.dialects.mysql import INTEGER
 
 from shop import db, app
 
 
 class RegisterModel(db.Model, UserMixin):
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(INTEGER(unsigned=True), primary_key=True)
     name = db.Column(db.String(64), unique=False)
     username = db.Column(db.String(64), unique=True)
     email = db.Column(db.String(64), unique=True)
