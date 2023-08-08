@@ -2,21 +2,25 @@
 
 {% block body_block %}
     {% include '_messages.html' %}
-    <h1 class="text-center h1 text-danger">Replenish Stock</h1>
     {% from "_formhelpers.html" import render_field %}
     <div class="container">
-        <form method="POST" action="">
-            {{ form.csrf_token }}
-            <div class="form-group">
-                {{ render_field(form.product, class="form-control") }}
+        <h1 class="text-center h1 text-danger mt-5">Replenish Stock</h1>
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <form method="POST" action="">
+                    {{ form.csrf_token }}
+                    <div class="form-group">
+                        {{ render_field(form.product, class="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        {{ render_field(form.category, class="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        {{ render_field(form.quantity, class="form-control") }}
+                    </div>
+                    <button type="submit" class="btn btn-info mt-2">Replenish</button>
+                </form>
             </div>
-            <div class="form-group">
-                {{ render_field(form.category, class="form-control") }}
-            </div>
-            <div class="form-group">
-                {{ render_field(form.quantity, class="form-control") }}
-            </div>
-            <input type="submit" value="Replenish" class="btn btn-info mt-2">
-        </form>
+        </div>
     </div>
 {% endblock body_block %}

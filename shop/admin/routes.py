@@ -34,7 +34,6 @@ def categories():
 def replenish_stock():
     form = ReplenishStockForm()
 
-    # Assuming you have a list of products and categories to populate the SelectField choices
     form.product.choices = [(product.id, product.name) for product in Product.query.all()]
     form.category.choices = [(category.id, category.name) for category in Category.query.all()]
     print(form.data, form.validate_on_submit())

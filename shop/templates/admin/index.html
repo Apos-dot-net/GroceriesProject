@@ -2,11 +2,10 @@
 
 {% block body_block %}
     {% include '_messages.html' %}
-    {% include 'navbar.html' %}
     <div class="container">
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <a class="navbar-brand" href="/admin">ADMIN</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
                     aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -24,70 +23,103 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/add/product">Add a Product</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/replenish_stock">Replenish Stock</a>
+                    </li>
+
                 </ul>
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('get_cart') }}">Cart({{ session['shop_cart']|length }})</a>
+                    </li>
+                    {% if current_user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class='nav-link'
+                               href="{{ url_for('logout', user_type=session['user_type']) }}">Logout</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class='nav-link disabled'>{{ current_user.username }}</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class='nav-link' href="{{ url_for('login', user_type='customer') }}">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class='nav-link' href="{{ url_for('register', user_type='customer') }}">Sign IN</a>
+                        </li>
+                    {% endif %}
+                </ul>
+
             </div>
         </nav>
     </div>
     <div class="container mt-5">
-        <table class="table table-lg table-condensed table-striped table-hover table-responsive-sm ">
-            <caption>List of Available products</caption>
-            <thead>
-            <th>Sr. No.</th>
-            <th>Product</th>
-            <th>Price</th>
-            <th>Brand</th>
-            <th>Image</th>
-            <th>Edit</th>
-            <th>Delete</th>
-            </thead>
-            <tbody>
-            {% for product in products %}
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <caption>List of Available products</caption>
+                <thead class="thead-light">
                 <tr>
-                    <td>{{ loop.index }}</td>
-                    <td>{{ product.name }}</td>
-                    <td>{{ product.price }}</td>
-                    <td>{{ product.brand.name }}</td>
-                    <td><img src="{{ url_for('static', filename='images/'+product.image_1) }}" width='200'
-                             alt="Image_1"></td>
-                    <td><a href="{{ url_for('update_product', product_id=product.id) }}"
-                           class="btn btn-outline-warning btn-sm"> Edit</a></td>
-                    <td>
-                        <!-- Button trigger modal -->
-                        <button type="button" class="btn btn-outline-danger btn-sm" data-toggle="modal"
-                                data-target="#exampleModal-{{ product.id }}">
-                            Delete
-                        </button>
-                    </td>
+                    <th>Sr. No.</th>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Brand</th>
+                    <th>Image</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
                 </tr>
+                </thead>
+                <tbody>
+                {% for product in products %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td>{{ product.name }}</td>
+                        <td>{{ product.price }}</td>
+                        <td>{{ product.brand.name }}</td>
+                        <td><img src="{{ url_for('static', filename='images/'+product.image_1) }}" width="100"
+                                 alt="Image_1"></td>
+                        <td><a href="{{ url_for('update_product', product_id=product.id) }}"
+                               class="btn btn-warning btn-sm">Edit</a></td>
+                        <td>
+                            <!-- Button trigger modal -->
+                            <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal"
+                                    data-bs-target="#exampleModal-{{ product.id }}">
+                                Delete
+                            </button>
+                        </td>
+                    </tr>
 
-                <!-- Modal -->
-                <div class="modal fade " id="exampleModal-{{ product.id }}" tabindex="-1" role="dialog"
-                     aria-labelledby="exampleModalLabel"
-                     aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">Delete {{ product.name }}</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <p>Are you Sure you want to delete {{ product.name }}</p>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cancel
-                                </button>
-                                <form action="{{ url_for('delete_entity', entity="product", entity_id=product.id) }}"
-                                      method="POST">
-                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                                </form>
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModal-{{ product.id }}" tabindex="-1" role="dialog"
+                         aria-labelledby="exampleModalLabel"
+                         aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Delete {{ product.name }}</h5>
+                                    <button type="button" class="close" data-dismiss="modal"
+                                            aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Are you Sure you want to delete {{ product.name }}</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary btn-sm"
+                                            data-dismiss="modal">Cancel
+                                    </button>
+                                    <form
+                                            action="{{ url_for('delete_entity', entity='product', entity_id=product.id) }}"
+                                            method="POST">
+                                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            {% endfor %}
-            </tbody>
-        </table>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 {% endblock body_block %}
