@@ -11,6 +11,7 @@ from ..customers.models import RegisterModel
 
 @app.route('/register/<string:user_type>', methods=["POST", "GET"])
 def register(user_type):
+    session["user_type"] = user_type
     if user_type == 'customer':
         form = CustomerRegistrationForm()
     elif user_type == 'admin':
