@@ -1,67 +1,77 @@
-<div class="container">
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="/">Store</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<div class="bg-light">
+    <div class="container">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark rounded">
+            <a class="navbar-brand" href="/">Store</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="/">All Products</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownBrands" role="button"
-                       data-bs-toggle="dropdown" aria-expanded="false">
-                        Brands
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownBrands">
-                        {% for brand in brands %}
-                            <li><a class="dropdown-item"
-                                   href="{{ url_for('get_entity', entity='brand', entity_id=brand.id) }}">{{ brand.name }}</a>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownCategories" role="button"
-                       data-bs-toggle="dropdown" aria-expanded="false">
-                        Categories
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownCategories">
-                        {% for c in categories %}
-                            <li><a class="dropdown-item"
-                                   href="{{ url_for('get_entity', entity='category', entity_id=c.id) }}">{{ c.name }}</a>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                </li>
-            </ul>
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('get_cart') }}">Cart({{ session['shop_cart']|length }})</a>
-                </li>
-                {% if current_user.is_authenticated %}
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class='nav-link' href="{{ url_for('logout', user_type=session['user_type']) }}">Logout</a>
+                        <a class="nav-link" href="/">All Products</a>
                     </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownBrands" role="button"
+                           data-bs-toggle="dropdown" aria-expanded="false">
+                            Brands
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownBrands">
+                            {% for brand in brands %}
+                                <li><a class="dropdown-item"
+                                       href="{{ url_for('get_entity', entity='brand', entity_id=brand.id) }}">{{ brand.name }}</a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownCategories" role="button"
+                           data-bs-toggle="dropdown" aria-expanded="false">
+                            Categories
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownCategories">
+                            {% for c in categories %}
+                                <li><a class="dropdown-item"
+                                       href="{{ url_for('get_entity', entity='category', entity_id=c.id) }}">{{ c.name }}</a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ml-auto">
                     <li class="nav-item">
-                        <a class='nav-link disabled'>{{ current_user.username }}</a>
+                        <a class="nav-link" href="{{ url_for('get_cart') }}">Cart({{ session['shop_cart']|length }})</a>
                     </li>
-                {% else %}
-                    <li class="nav-item">
-                        <a class='nav-link' href="{{ url_for('login', user_type='customer') }}">Login</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class='nav-link' href="{{ url_for('register', user_type='customer') }}">Sign IN</a>
-                    </li>
-                {% endif %}
-            </ul>
-            <form class="form-inline my-2 my-lg-0">
-                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-            </form>
-        </div>
-    </nav>
+                    {% if current_user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class='nav-link'
+                               href="{{ url_for('logout', user_type=session['user_type']) }}">Logout</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class='nav-link disabled'>{{ current_user.username }}</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class='nav-link' href="{{ url_for('login', user_type='customer') }}">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class='nav-link' href="{{ url_for('register', user_type='customer') }}">Sign IN</a>
+                        </li>
+                    {% endif %}
+                </ul>
+                <form class="form-inline my-2 my-lg-0" action="{{ url_for('get_entity', entity='search', entity_id=0) }}">
+                    <div class="input-group">
+                        <input class="form-control" type="search" placeholder="Search" aria-label="Search" name="search_query">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-success bg-light" type="submit">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </nav>
+    </div>
 </div>

@@ -25,6 +25,9 @@ class Purchase(db.Model):
     category_id = db.Column(INTEGER(unsigned=True), db.ForeignKey('category.id', ondelete="CASCADE"), nullable=False)
     category = db.relationship('Category', backref=db.backref('purchases', lazy=True))
 
+    brand_id = db.Column(INTEGER(unsigned=True), db.ForeignKey('brand.id', ondelete="CASCADE"), nullable=False)
+    brand = db.relationship('Brand', backref=db.backref('purchases', lazy=True))
+
     def __repr__(self):
         return '<Purchase %r>' % self.id
 
@@ -33,7 +36,6 @@ class Purchase(db.Model):
 def update_stock_after_purchase(mapper, connection, target):
     # Check if the purchased quantity exceeds the available stock
     avail_stock = int(db.session.query(Product).filter_by(id=target.product_id).first().stock)
-    print(int(target.quantity))
     if int(target.quantity) > avail_stock:
         raise ValueError("Not enough stock available for purchase.")
     elif int(target.quantity) < 0:

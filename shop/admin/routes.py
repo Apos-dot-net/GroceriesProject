@@ -36,7 +36,6 @@ def replenish_stock():
 
     form.product.choices = [(product.id, product.name) for product in Product.query.all()]
     form.category.choices = [(category.id, category.name) for category in Category.query.all()]
-    print(form.data, form.validate_on_submit())
 
     if form.validate_on_submit():
         # Get the selected product ID and quantity from the form

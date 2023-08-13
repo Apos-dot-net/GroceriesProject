@@ -24,13 +24,6 @@ photos = UploadSet('photos', IMAGES)
 configure_uploads(app, photos)
 patch_request_class(app)
 
-migrate = Migrate(app, db)
-with app.app_context():
-    if db.engine.url.drivername == 'sqlite':
-        migrate.init_app(app, db, render_as_batch=True)
-    else:
-        migrate.init_app(app, db)
-
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'choose_user_type'

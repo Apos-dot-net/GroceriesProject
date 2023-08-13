@@ -26,11 +26,15 @@ class Product(db.Model):
 class Brand(db.Model):
     id = db.Column(INTEGER(unsigned=True), primary_key=True)
     name = db.Column(db.String(64), nullable=False, unique=True)
+    branded_products = db.relationship(Product, back_populates="brand", cascade="all, delete, delete-orphan")
+    branded_purchases = db.relationship('Purchase', back_populates="brand", cascade="all, delete, delete-orphan")
 
 
 class Category(db.Model):
     id = db.Column(INTEGER(unsigned=True), primary_key=True)
     name = db.Column(db.String(64), nullable=False, unique=True)
+    categorical_products = db.relationship(Product, back_populates="category", cascade="all, delete, delete-orphan")
+    categorical_purchases = db.relationship('Purchase', back_populates="category", cascade="all, delete, delete-orphan")
 
 
 with app.app_context():

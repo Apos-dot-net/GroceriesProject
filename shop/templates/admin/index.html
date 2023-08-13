@@ -77,44 +77,58 @@
                         <td><a href="{{ url_for('update_product', product_id=product.id) }}"
                                class="btn btn-warning btn-sm">Edit</a></td>
                         <td>
-                            <!-- Button trigger modal -->
-                            <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal"
-                                    data-bs-target="#exampleModal-{{ product.id }}">
+                            <button type="button" class="btn btn-danger btn-sm delete-product"
+                                    data-product-id="{{ product.id }}" data-product-name="{{ product.name }}">
                                 Delete
                             </button>
                         </td>
                     </tr>
-
-                    <!-- Modal -->
-                    <div class="modal fade" id="exampleModal-{{ product.id }}" tabindex="-1" role="dialog"
-                         aria-labelledby="exampleModalLabel"
-                         aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLabel">Delete {{ product.name }}</h5>
-                                    <button type="button" class="close" data-dismiss="modal"
-                                            aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <p>Are you Sure you want to delete {{ product.name }}</p>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary btn-sm"
-                                            data-dismiss="modal">Cancel
-                                    </button>
-                                    <form
-                                            action="{{ url_for('delete_entity', entity='product', entity_id=product.id) }}"
-                                            method="POST">
-                                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 {% endfor %}
+
+                <!-- Include SweetAlert2 library (adjust the path if needed) -->
+                <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+                <!-- JavaScript code to handle the delete action with SweetAlert2 -->
+                <script>
+                    // Event listener for the delete button
+                    document.querySelectorAll('.delete-product').forEach(function (button) {
+                        button.addEventListener('click', function () {
+                            const productId = button.getAttribute('data-product-id');
+                            const productName = button.getAttribute('data-product-name');
+
+
+                            // Show a confirmation dialog with SweetAlert2
+                            Swal.fire({
+                                title: 'Delete Product?',
+                                html: 'Are you sure you want to delete <span style="color: #ff0000;">' + productName + '</span>?',
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonColor: '#d33',
+                                cancelButtonColor: '#3085d6',
+                                confirmButtonText: 'Delete',
+                                cancelButtonText: 'Cancel',
+                                allowHtml: true
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    // User confirmed, proceed with deletion
+                                    const deleteForm = document.createElement('form');
+                                    deleteForm.method = 'POST';
+                                    deleteForm.action = '{{ url_for("delete_entity", entity="product", entity_id="0") }}' + productId;
+
+                                    // Create a delete button
+                                    const deleteButton = document.createElement('button');
+                                    deleteButton.type = 'submit';
+                                    deleteButton.style.display = 'none'; // Hide the button
+                                    deleteForm.appendChild(deleteButton);
+
+                                    // Attach the form to the DOM and submit it
+                                    document.body.appendChild(deleteForm);
+                                    deleteButton.click();
+                                }
+                            });
+                        });
+                    });
+                </script>
                 </tbody>
             </table>
         </div>

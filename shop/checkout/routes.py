@@ -24,15 +24,14 @@ def add_cart():
         if request.method == "POST" and product_id and quantity:
             dict_items = {product_id: {"name": product.name, "category": int(product.category.id),
                                        'price': int(product.price), 'quantity': int(quantity),
-                                       'image': product.image_1, 'stock': int(product.stock)}}
+                                       'image': product.image_1, 'stock': int(product.stock),
+                                       'brand': product.brand_id}}
             if 'shop_cart' in session:
-                print(session['shop_cart'])
                 if product_id in session['shop_cart']:
                     for key, item in session['shop_cart'].items():
                         if int(key) == int(product_id):
                             session.modified = True
                             item['quantity'] += 1
-                    print("This product is already in your Cart")
                 else:
                     session['shop_cart'] = merge_dict(session['shop_cart'], dict_items)
             else:
@@ -124,9 +123,9 @@ def checkout():
                 user_id=current_user.id,
                 product_id=key,
                 quantity=product['quantity'],
-                category_id=product['category']
+                category_id=product['category'],
+                brand_id=product['brand']
             )
-            print(purchase)
             db.session.add(purchase)
 
         db.session.commit()

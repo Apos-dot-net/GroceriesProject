@@ -52,6 +52,14 @@ def get_entity(entity, entity_id):
         entity_name = Category.query.get(entity_id).name
         entity_products = Product.query.filter_by(category=get_entity_obj).paginate(page=page, per_page=16)
         entity_var = 'category'
+    elif entity == 'search':
+        search_word = str(request.args.get('search_query'))
+        page = request.args.get('page', 1, type=int)
+        products = Product.query.filter(
+            db.and_(Product.stock > 0, Product.name.like("%{}%".format(search_word)))).paginate(page=page, per_page=16)
+        return render_template('products/index.html', title="Store Home", products=products,
+                               brands=get_entities_with_products('brand'),
+                               categories=get_entities_with_products('category'))
     else:
         flash('Invalid entity', 'warning')
         return redirect(url_for('admin'))
@@ -61,7 +69,7 @@ def get_entity(entity, entity_id):
         'title': entity_name,
         'brands': get_entities_with_products('brand'),
         'categories': get_entities_with_products('category'),
-        'get_b': get_entity_obj if entity == 'brand' else None,
+        'get_brand': get_entity_obj if entity == 'brand' else None,
         'get_cat': get_entity_obj if entity == 'category' else None,
     })
 
@@ -127,20 +135,19 @@ def update_entity(entity, entity_id):
         return redirect(url_for('admin'))
 
     if request.method == "POST":
-        entity_name = request.form.get('name')
+        entity_name = request.form.get('newVal')
         entity_query.name = entity_name
         db.session.commit()
         flash(f'Your {entity} has been updated', 'success')
-        if entity == 'brand':
-            return redirect(url_for('brands'))
-        elif entity == 'category':
-            return redirect(url_for('categories'))
-        else:
-            return redirect(url_for('admin'))
-
-    template_title = f'Update {entity.capitalize()} Info'
-    template_var = f'update{entity}'
-    return render_template('products/update_brand.html', title=template_title, **{template_var: entity_query})
+    if entity == 'brand':
+        brand_types = Brand.query.order_by(Brand.id.desc()).all()
+        return render_template('admin/categories.html', title="Categories Page", categories=brand_types)
+    elif entity == 'category':
+        category_types = Category.query.order_by(Category.id.desc()).all()
+        return render_template('admin/categories.html', title="Categories Page", categories=category_types)
+    else:
+        flash('Invalid entity', 'warning')
+        return redirect(url_for('admin'))
 
 
 @app.route('/update/product/<int:product_id>', methods=["GET", "POST"])
