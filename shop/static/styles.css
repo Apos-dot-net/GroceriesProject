@@ -135,3 +135,17 @@
     border-bottom: 1px solid #ddd;
 }
 
+.banner {
+    background-color: #007bff;
+    color: white;
+    padding: 1rem;
+    margin: 1rem 0;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.banner h1 {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: bold;
+}

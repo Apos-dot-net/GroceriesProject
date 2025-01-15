@@ -40,76 +40,98 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 
     <div class="container">
-        <div class="categories-grid">
-            <!-- Category Cards -->
-            <div class="card text-center">
-                <div class="card-body">
-                    <h5 class="card-title">Dairy</h5>
-                    <p class="card-text">Fresh dairy products for your everyday needs.</p>
-                    {# <button class="btn btn-primary" onclick="window.location.href = '{{ url_for('category_page', category='dairy') }}';"> #}
-                    <button class="btn btn-primary" disabled>
-                        View Dairy
-                    </button>
-                </div>
-            </div>
+        <!-- Check if the current URL matches any category -->
+        {% set current_url = request.path %}
 
-            <div class="card text-center">
-                <div class="card-body">
-                    <h5 class="card-title">Vegetables</h5>
-                    <p class="card-text">Fresh and organic vegetables available.</p>
-                    {# <button class="btn btn-primary" onclick="window.location.href = '{{ url_for('category_page', category='vegetables') }}';"> #}
-                    <button class="btn btn-primary" disabled>
-                        View Vegetables
-                    </button>
-                </div>
+        {% if current_url == url_for('get_entity', entity='category', entity_id=2) %}
+            <div class="banner text-center">
+                <h1>Dairy</h1>
             </div>
+        {% elif current_url == url_for('get_entity', entity='category', entity_id=3) %}
+            <div class="banner text-center">
+                <h1>Vegetables</h1>
+            </div>
+        {% elif current_url == url_for('get_entity', entity='category', entity_id=4) %}
+            <div class="banner text-center">
+                <h1>Fruits</h1>
+            </div>
+        {% elif current_url == url_for('get_entity', entity='category', entity_id=5) %}
+            <div class="banner text-center">
+                <h1>Meat and Eggs</h1>
+            </div>
+        {% elif current_url == url_for('get_entity', entity='category', entity_id=6) %}
+            <div class="banner text-center">
+                <h1>Bread</h1>
+            </div>
+        {% elif current_url == url_for('get_entity', entity='category', entity_id=7) %}
+            <div class="banner text-center">
+                <h1>Grains and Pulses</h1>
+            </div>
+        {% else %}
+            <!-- Show the category grid only if no specific category page is being viewed -->
+            <div class="categories-grid">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">Dairy</h5>
+                        <p class="card-text">Fresh dairy products for your everyday needs.</p>
+                        <button class="btn btn-primary" onclick="window.location.href = '{{ url_for('get_entity', entity='category', entity_id=2) }}';">
+                            View Dairy
+                        </button>
+                    </div>
+                </div>
 
-            <div class="card text-center">
-                <div class="card-body">
-                    <h5 class="card-title">Fruits</h5>
-                    <p class="card-text">Fresh fruits delivered straight to your door.</p>
-                    {# <button class="btn btn-primary" onclick="window.location.href = '{{ url_for('category_page', category='fruits') }}';"> #}
-                    <button class="btn btn-primary" disabled>
-                        View Fruits
-                    </button>
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">Vegetables</h5>
+                        <p class="card-text">Fresh and organic vegetables available.</p>
+                        <button class="btn btn-primary" onclick="window.location.href = '{{ url_for('get_entity', entity='category', entity_id=3) }}';">
+                            View Vegetables
+                        </button>
+                    </div>
                 </div>
-            </div>
 
-            <div class="card text-center">
-                <div class="card-body">
-                    <h5 class="card-title">Meat and Eggs</h5>
-                    <p class="card-text">Quality meat and fresh eggs for your meals.</p>
-                    {# <button class="btn btn-primary" onclick="window.location.href = '{{ url_for('category_page', category='meat_and_eggs') }}';"> #}
-                    <button class="btn btn-primary" disabled>
-                        View Meat and Eggs
-                    </button>
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">Fruits</h5>
+                        <p class="card-text">Fresh fruits delivered straight to your door.</p>
+                        <button class="btn btn-primary" onclick="window.location.href = '{{ url_for('get_entity', entity='category', entity_id=4) }}';">
+                            View Fruits
+                        </button>
+                    </div>
                 </div>
-            </div>
 
-            <div class="card text-center">
-                <div class="card-body">
-                    <h5 class="card-title">Bread</h5>
-                    <p class="card-text">Freshly baked bread for all your needs.</p>
-                    {# <button class="btn btn-primary" onclick="window.location.href = '{{ url_for('category_page', category='bread') }}';"> #}
-                    <button class="btn btn-primary" disabled>
-                        View Bread
-                    </button>
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">Meat and Eggs</h5>
+                        <p class="card-text">Quality meat and fresh eggs for your meals.</p>
+                        <button class="btn btn-primary" onclick="window.location.href = '{{ url_for('get_entity', entity='category', entity_id=5) }}';">
+                            View Meat and Eggs
+                        </button>
+                    </div>
                 </div>
-            </div>
 
-            <div class="card text-center">
-                <div class="card-body">
-                    <h5 class="card-title">Grains and Pulses</h5>
-                    <p class="card-text">Wide variety of grains and pulses available.</p>
-                    {# <button class="btn btn-primary" onclick="window.location.href = '{{ url_for('category_page', category='grains_and_pulses') }}';"> #}
-                    <button class="btn btn-primary" disabled>
-                        View Grains and Pulses
-                    </button>
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">Bread</h5>
+                        <p class="card-text">Freshly baked bread for all your needs.</p>
+                        <button class="btn btn-primary" onclick="window.location.href = '{{ url_for('get_entity', entity='category', entity_id=6) }}';">
+                            View Bread
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">Grains and Pulses</h5>
+                        <p class="card-text">Wide variety of grains and pulses available.</p>
+                        <button class="btn btn-primary" onclick="window.location.href = '{{ url_for('get_entity', entity='category', entity_id=7) }}';">
+                            View Grains and Pulses
+                        </button>
+                    </div>
                 </div>
             </div>
-        </div>
+        {% endif %}
     </div>
-
     <div class="container">
         <div class="row mt-2">
             {% if brand %}
