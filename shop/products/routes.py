@@ -27,7 +27,11 @@ def home():
     return render_template('products/index.html', title="Store Home", products=products,
                            brands=get_entities_with_products('brand'),
                            categories=get_entities_with_products('category'))
-
+@app.route('/welcome_page')
+def welcome():
+    return render_template('welcome.html', title="Store Home", products="hello",
+                           brands=get_entities_with_products('brand'),
+                           categories=get_entities_with_products('category'))
 
 @app.route('/product/<int:product_id>')
 def product_details(product_id):

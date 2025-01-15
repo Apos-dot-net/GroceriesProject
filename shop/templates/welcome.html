@@ -1,0 +1,21 @@
+{% extends 'layout.html' %}
+
+{% block body_block %}
+<div
+    class="d-flex justify-content-center align-items-center vh-100 text-white"
+    style="background-image: url('{{ url_for('static', filename='images/welcome_bg(2).jpg') }}'); background-size: cover; background-position: center;">
+    <div
+        class="text-center p-5 rounded"
+        style="background-color: rgba(0, 0, 0, 0.6);"> <!-- Translucent Background -->
+        <!-- Welcome Message -->
+        <h1 class="display-4">Welcome to Our Grocery Website - OneClick!</h1>
+        <p class="lead mt-3">Your one-stop solution for all your grocery needs.</p>
+
+        <!-- Buttons for Customer and Seller -->
+        <div class="mt-4">
+            <a href="{{ url_for('login', user_type='customer') }}" class="btn btn-lg btn-success mx-2">Customer</a>
+            <a href="{{ url_for('login', user_type='admin') }}" class="btn btn-lg btn-warning mx-2">Seller (Admin)</a>
+        </div>
+    </div>
+</div>
+{% endblock body_block %}

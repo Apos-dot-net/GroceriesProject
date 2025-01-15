@@ -1,24 +1,33 @@
 {% extends 'layout.html' %}
 
 {% block body_block %}
-    <div class="bg-image position-relative" style="background-image: url({{ url_for('static', filename='Background.jpg') }});">
-        <div class="overlay overlay-dark"></div> <!-- Add Bootstrap overlay classes -->
+    <div class="bg-image position-relative" style="background-image: url({{ url_for('static', filename='/images/customer_bg.jpg') }});
+        background-size: 100%; background-position: center; height: 100vh;">
+        <div class="overlay overlay-dark"></div>
         <div class="container">
             <div class="row justify-content-center align-items-center vh-100">
                 <div class="col-md-4">
                     <div class="card">
-                        <div class="card-body">
+                        <div class="card-body text-black text-center">
                             {% include '_messages.html' %}
-                            <h1 class="text-center mb-4">Customer Login</h1>
+                            <h1 class="text-center mb-4">Welcome!</h1>
+                            <p class="mt-2">Thank you for choosing us!</p>
                             <form method="POST" enctype="multipart/form-data">
                                 {{ form.csrf_token }}
                                 <div class="mb-3">
-                                    <input type="email" name="email" class="form-control" placeholder="Email" required>
+                                    <input type="email" name="email" class="form-control mb-3" placeholder="Email" required>
                                     <input type="password" name="password" class="form-control" placeholder="Password" required>
                                 </div>
                                 <div class="d-grid">
-                                    <input type="submit" value="Login" class="btn btn-primary">
-                                    <a href="{{ url_for('register', user_type='customer') }}" class="btn btn-secondary mt-2">
+                                    <!-- Login Button -->
+                                    <input type="submit" value="Login" class="btn btn-primary mb-3">
+
+                                    <!-- Text above Sign-up Button -->
+                                    <p class="text-center mb-2">Or</p>
+                                    <p class="text-center mb-2">Don't have an account? Create one</p>
+
+                                    <!-- Sign-up Button -->
+                                    <a href="{{ url_for('register', user_type='customer') }}" class="btn btn-secondary">
                                         Sign-up
                                     </a>
                                 </div>
@@ -30,4 +39,3 @@
         </div>
     </div>
 {% endblock body_block %}
-

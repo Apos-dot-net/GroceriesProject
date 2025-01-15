@@ -2,58 +2,70 @@
 
 {% block body_block %}
     {% include '_messages.html' %}
-    <div class="container">
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <a class="navbar-brand" href="/admin">ADMIN</a>
+    <div class="container-fluid p-0">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark" style="border-bottom: 2px solid #fff; padding: 0.2rem 1rem;">
+            <!-- ADMIN link placed at the leftmost of the navbar -->
+            <a class="navbar-brand text-light" href="/admin" style="padding-right: 5px;">ADMIN</a>
+
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
                     aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
-                <ul class="navbar-nav">
-                    <li class="nav-item active">
-                        <a class="nav-link" href="/admin">Home <span class="sr-only">(current)</span></a>
+                <ul class="navbar-nav me-auto d-flex align-items-center">
+                    <li class="nav-item">
+                        <a class="btn btn-outline-light me-2" href="/admin">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/brands">Brands</a>
+                        <a class="btn btn-outline-light me-2" href="/brands">Brands</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/categories">Categories</a>
+                        <a class="btn btn-outline-light me-2" href="/categories">Categories</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/add/product">Add a Product</a>
+                        <a class="btn btn-outline-light me-2" href="/add/product">Product</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/replenish_stock">Replenish Stock</a>
+                        <a class="btn btn-outline-light me-2" href="/replenish_stock">Replenish Stock</a>
                     </li>
-
                 </ul>
-                <ul class="navbar-nav ml-auto">
+                <ul class="navbar-nav ms-auto d-flex align-items-center">
                     {% if current_user.is_authenticated %}
-                        <li class="nav-item">
-                            <a class='nav-link'
-                               href="{{ url_for('logout', user_type=session['user_type']) }}">Logout</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class='nav-link disabled'>{{ current_user.username }}</a>
+                        <li class="nav-item dropdown">
+                            <a class="btn btn-outline-light dropdown-toggle" href="#" id="profileDropdown" role="button"
+                               data-bs-toggle="dropdown" aria-expanded="false">
+                                Profile
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+                                <li>
+                                    <div class="dropdown-item text-center">
+                                        <img src="{{ url_for('static', filename='admin.jpg') }}" alt="Admin Picture"
+                                             class="rounded-circle mb-2" width="50" height="50">
+                                        <p class="mb-0"><strong>{{ current_user.username }}</strong></p>
+                                    </div>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a class="dropdown-item text-danger" href="{{ url_for('logout', user_type=session['user_type']) }}">Logout</a>
+                                </li>
+                            </ul>
                         </li>
                     {% else %}
                         <li class="nav-item">
-                            <a class='nav-link' href="{{ url_for('login', user_type='customer') }}">Login</a>
+                            <a class="btn btn-outline-light me-2" href="{{ url_for('login', user_type='customer') }}">Login</a>
                         </li>
                         <li class="nav-item">
-                            <a class='nav-link' href="{{ url_for('register', user_type='customer') }}">Sign IN</a>
+                            <a class="btn btn-outline-light" href="{{ url_for('register', user_type='customer') }}">Sign In</a>
                         </li>
                     {% endif %}
                 </ul>
-
             </div>
         </nav>
     </div>
     <div class="container mt-5">
         <div class="table-responsive">
             <table class="table table-bordered table-striped">
-                <caption>List of Available products</caption>
+                <caption>List of Available Products</caption>
                 <thead class="thead-light">
                 <tr>
                     <th>Sr. No.</th>
@@ -84,51 +96,6 @@
                         </td>
                     </tr>
                 {% endfor %}
-
-                <!-- Include SweetAlert2 library (adjust the path if needed) -->
-                <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-                <!-- JavaScript code to handle the delete action with SweetAlert2 -->
-                <script>
-                    // Event listener for the delete button
-                    document.querySelectorAll('.delete-product').forEach(function (button) {
-                        button.addEventListener('click', function () {
-                            const productId = button.getAttribute('data-product-id');
-                            const productName = button.getAttribute('data-product-name');
-
-
-                            // Show a confirmation dialog with SweetAlert2
-                            Swal.fire({
-                                title: 'Delete Product?',
-                                html: 'Are you sure you want to delete <span style="color: #ff0000;">' + productName + '</span>?',
-                                icon: 'warning',
-                                showCancelButton: true,
-                                confirmButtonColor: '#d33',
-                                cancelButtonColor: '#3085d6',
-                                confirmButtonText: 'Delete',
-                                cancelButtonText: 'Cancel',
-                                allowHtml: true
-                            }).then((result) => {
-                                if (result.isConfirmed) {
-                                    // User confirmed, proceed with deletion
-                                    const deleteForm = document.createElement('form');
-                                    deleteForm.method = 'POST';
-                                    deleteForm.action = '{{ url_for("delete_entity", entity="product", entity_id="0") }}' + productId;
-
-                                    // Create a delete button
-                                    const deleteButton = document.createElement('button');
-                                    deleteButton.type = 'submit';
-                                    deleteButton.style.display = 'none'; // Hide the button
-                                    deleteForm.appendChild(deleteButton);
-
-                                    // Attach the form to the DOM and submit it
-                                    document.body.appendChild(deleteForm);
-                                    deleteButton.click();
-                                }
-                            });
-                        });
-                    });
-                </script>
                 </tbody>
             </table>
         </div>

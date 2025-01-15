@@ -2,162 +2,99 @@
 
 {% block body_block %}
     {% include '_messages.html' %}
-    <div class="container">
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <a class="navbar-brand" href="/admin">ADMIN</a>
+    <div class="container-fluid"> <!-- Changed to container-fluid -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark rounded w-100">
+            <a class="navbar-brand text-white" href="/admin">ADMIN</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
                     aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
-                <ul class="navbar-nav">
-                    <li class="nav-item active">
-                        <a class="nav-link" href="/admin">Home <span class="visually-hidden">(current)</span></a>
+                <ul class="navbar-nav w-100">
+                    <li class="nav-item">
+                        <button class="btn btn-outline-light me-2" onclick="location.href = '/admin';">Home</button>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/brands">Brands</a>
+                        <button class="btn btn-outline-light me-2" onclick="location.href = '/categories';">Categories</button>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/categories">Categories</a>
+                        <button class="btn btn-outline-light me-2" href="/add/product">Product</button>
                     </li>
+                    <li class="nav-item">
+                        <a class="btn btn-outline-light me-2" href="/replenish_stock">Replenish Stock</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ms-auto d-flex align-items-center">
+                    {% if current_user.is_authenticated %}
+                        <li class="nav-item dropdown">
+                            <a class="btn btn-outline-light dropdown-toggle" href="#" id="profileDropdown" role="button"
+                               data-bs-toggle="dropdown" aria-expanded="false">
+                                Profile
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+                                <li>
+                                    <div class="dropdown-item text-center">
+                                        <img src="{{ url_for('static', filename='admin.jpg') }}" alt="Admin Picture"
+                                             class="rounded-circle mb-2" width="50" height="50">
+                                        <p class="mb-0"><strong>{{ current_user.username }}</strong></p>
+                                    </div>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a class="dropdown-item text-danger" href="{{ url_for('logout', user_type=session['user_type']) }}">Logout</a>
+                                </li>
+                            </ul>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="btn btn-outline-light me-2" href="{{ url_for('login', user_type='customer') }}">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="btn btn-outline-light" href="{{ url_for('register', user_type='customer') }}">Sign In</a>
+                        </li>
+                    {% endif %}
                 </ul>
             </div>
         </nav>
     </div>
+
     <div class="container mt-5">
-        <table class="table table-striped">
-            <thead class="thead-light">
-            <tr>
-                <th>Sr. No.</th>
-                <th>Name</th>
-                <th>Edit</th>
-                <th>Delete</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% if brands %}
-                {% for brand in brands %}
-                    <tr>
-                        <td>{{ loop.index }}</td>
-                        <td>{{ brand.name }}</td>
-                        <td>
-                            <a href="#" class="btn btn-warning btn-sm edit-brand"
-                               data-brand-id="{{ brand.id }}"
-                               data-brand-name="{{ brand.name }}">
-                                Edit
-                            </a>
-                        </td>
-                        <td>
-                            <button type="button" class="btn btn-danger btn-sm delete-brand"
-                                    data-brand-id="{{ brand.id }}"
-                                    data-brand-name="{{ brand.name }}">
-                                Delete
-                            </button>
-                        </td>
-                    </tr>
-                {% endfor %}
+        <div class="table-responsive">
+            <table class="table table-lg table-condensed table-striped table-hover">
+                <thead class="thead-light">
+                <tr>
+                    <th>Sr. No.</th>
+                    <th>Name</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% if brands %}
+                    {% for brand in brands %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td>{{ brand.name }}</td>
+                            <td>
+                                <a href="#" class="btn btn-warning btn-sm edit-brand"
+                                   data-brand-id="{{ brand.id }}"
+                                   data-brand-name="{{ brand.name }}">
+                                    Edit
+                                </a>
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-danger btn-sm delete-brand"
+                                        data-brand-id="{{ brand.id }}"
+                                        data-brand-name="{{ brand.name }}">
+                                    Delete
+                                </button>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% endif %}
+                </tbody>
+            </table>
 
-                <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-                <!-- JavaScript code to handle the delete action with SweetAlert2 -->
-                <script>
-                    // Event listener for the delete button
-                    document.querySelectorAll('.delete-brand').forEach(function (button) {
-                        button.addEventListener('click', function () {
-                            const brandId = button.getAttribute('data-brand-id');
-                            const brandName = button.getAttribute('data-brand-name');
-
-                            // Show a confirmation dialog with SweetAlert2
-                            Swal.fire({
-                                title: 'Delete Brand?',
-                                html: 'Are you sure you want to delete <span style="color: #ff0000;">' + brandName + '</span>?',
-                                icon: 'warning',
-                                showCancelButton: true,
-                                confirmButtonColor: '#d33',
-                                cancelButtonColor: '#3085d6',
-                                confirmButtonText: 'Delete',
-                                cancelButtonText: 'Cancel',
-                                allowHtml: true // Allow HTML in the message
-                            }).then((result) => {
-                                if (result.isConfirmed) {
-                                    // User confirmed, proceed with deletion
-                                    const deleteForm = document.createElement('form');
-                                    deleteForm.method = 'POST';
-                                    // Pass the entity and entity_id parameters
-                                    deleteForm.action = '{{ url_for("delete_entity", entity="brand", entity_id="0") }}' + brandId;
-
-                                    // Create a CSRF token input field (adjust the field name if needed)
-                                    const csrfTokenInput = document.createElement('input');
-                                    csrfTokenInput.type = 'hidden';
-
-                                    // Create a delete button
-                                    const deleteButton = document.createElement('button');
-                                    deleteButton.type = 'submit';
-                                    deleteButton.style.display = 'none'; // Hide the button
-                                    deleteForm.appendChild(deleteButton);
-
-                                    // Attach the form to the DOM and submit it
-                                    document.body.appendChild(deleteForm);
-                                    deleteButton.click();
-                                }
-                            });
-                        });
-                    });
-
-                    // Event listener for the edit link
-                    document.querySelectorAll('.edit-brand').forEach(function (link) {
-                        link.addEventListener('click', async function (event) {
-                            event.preventDefault();
-                            const brandId = link.getAttribute('data-brand-id');
-                            const brandName = link.getAttribute('data-brand-name');
-
-                            // Show a confirmation dialog with SweetAlert2
-                            const {value: newVal} = await Swal.fire({
-                                title: 'Edit brand',
-                                input: 'text',
-                                inputLabel: 'Enter new brand name',
-                                inputValue: brandName,
-                                showCancelButton: true,
-                                confirmButtonColor: '#3085d6',
-                                cancelButtonColor: '#d33',
-                                confirmButtonText: 'Edit',
-                                cancelButtonText: 'Cancel',
-                                inputValidator: (value) => {
-                                    if (!value) {
-                                        return 'You need to write something!'
-                                    }
-                                }
-                            }).then((result) => {
-                                if (result.isConfirmed && result.value) {
-                                    const editForm = document.createElement('form');
-                                    editForm.method = 'POST';
-                                    editForm.action = '{{ url_for("update_entity", entity="brand", entity_id="0") }}' + brandId;
-
-                                    // Create a edit button
-                                    const editButton = document.createElement('button');
-                                    editButton.type = 'submit';
-                                    editButton.style.display = 'none'; // Hide the button
-                                    editForm.appendChild(editButton);
-
-                                    // Create a edit input
-                                    const editInput = document.createElement('input');
-                                    editInput.type = 'text';
-                                    editInput.name = 'newVal'
-                                    editInput.style.display = 'none'; // Hide the input
-                                    editInput.value = result.value
-                                    editForm.appendChild(editInput);
-
-                                    // Attach the form to the DOM and submit it
-                                    document.body.appendChild(editForm);
-                                    editButton.click();
-                                }
-                            });
-                        })
-                        ;
-                    });
-                </script>
-
-            {% endif %}
             <tr>
                 <td colspan="4" style="text-align: center;">
                     <button type="button" class="btn btn-primary"
@@ -166,7 +103,95 @@
                     </button>
                 </td>
             </tr>
-            </tbody>
-        </table>
+        </div>
     </div>
+
+    <!-- Include SweetAlert2 library -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- JavaScript code to handle the delete action with SweetAlert2 -->
+    <script>
+        // Event listener for the delete button
+        document.querySelectorAll('.delete-brand').forEach(function (button) {
+            button.addEventListener('click', function () {
+                const brandId = button.getAttribute('data-brand-id');
+                const brandName = button.getAttribute('data-brand-name');
+
+                // Show a confirmation dialog with SweetAlert2
+                Swal.fire({
+                    title: 'Delete Brand?',
+                    html: 'Are you sure you want to delete <span style="color: #ff0000;">' + brandName + '</span>?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Delete',
+                    cancelButtonText: 'Cancel',
+                    allowHtml: true // Allow HTML in the message
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // User confirmed, proceed with deletion
+                        const deleteForm = document.createElement('form');
+                        deleteForm.method = 'POST';
+                        deleteForm.action = '{{ url_for("delete_entity", entity="brand", entity_id="0") }}' + brandId;
+
+                        const deleteButton = document.createElement('button');
+                        deleteButton.type = 'submit';
+                        deleteButton.style.display = 'none'; // Hide the button
+                        deleteForm.appendChild(deleteButton);
+
+                        document.body.appendChild(deleteForm);
+                        deleteButton.click();
+                    }
+                });
+            });
+        });
+
+        // Event listener for the edit link
+        document.querySelectorAll('.edit-brand').forEach(function (link) {
+            link.addEventListener('click', async function (event) {
+                event.preventDefault();
+                const brandId = link.getAttribute('data-brand-id');
+                const brandName = link.getAttribute('data-brand-name');
+
+                const {value: newVal} = await Swal.fire({
+                    title: 'Edit Brand',
+                    input: 'text',
+                    inputLabel: 'Enter new brand name',
+                    inputValue: brandName,
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Edit',
+                    cancelButtonText: 'Cancel',
+                    inputValidator: (value) => {
+                        if (!value) {
+                            return 'You need to write something!'
+                        }
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed && result.value) {
+                        const editForm = document.createElement('form');
+                        editForm.method = 'POST';
+                        editForm.action = '{{ url_for("update_entity", entity="brand", entity_id="0") }}' + brandId;
+
+                        const editButton = document.createElement('button');
+                        editButton.type = 'submit';
+                        editButton.style.display = 'none';
+                        editForm.appendChild(editButton);
+
+                        const editInput = document.createElement('input');
+                        editInput.type = 'text';
+                        editInput.name = 'newVal'
+                        editInput.style.display = 'none';
+                        editInput.value = result.value
+                        editForm.appendChild(editInput);
+
+                        document.body.appendChild(editForm);
+                        editButton.click();
+                    }
+                });
+            });
+        });
+    </script>
 {% endblock body_block %}

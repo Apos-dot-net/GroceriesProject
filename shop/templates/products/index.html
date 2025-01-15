@@ -1,42 +1,114 @@
 {% extends 'layout.html' %}
 
 {% macro render_product_card(product) %}
-    <div class="col-lg-3 col-md-4 col-sm-6 d-flex align-items-stretch" style="transition: transform 0.9s;">
-        <div class="card mt-3 mb-3" style="cursor: pointer;" onmouseover="this.style.transform = 'scale(1.05)';"
-             onmouseout="this.style.transform = 'scale(1)';">
-            <div class="card-header rounded-bottom">
-                <p class="text-center">{{ product.brand.name }}</p>
-            </div>
+<div class="col-lg-3 col-md-4 col-sm-6 d-flex align-items-stretch">
+    <div class="product-card">
+        <!-- Brand Name as a Ribbon -->
+        <div class="product-card-header">
+            {{ product.brand.name }}
+        </div>
 
-            <div class="card-body d-flex flex-column"
-                 onclick="window.location.href = '{{ url_for('product_details', product_id=product.id) }}';">
-                <div class="p-2 bd-highlight">
-                    <img src="{{ url_for('static', filename='images/'+product.image_1) }}"
-                         alt="{{ product.name }}" class="card-img-top">
-                </div>
-                <h5 class="mt-auto text-center">{{ product.name }}</h5>
-            </div>
-            <div class="card-footer">
-                <p class="text-center align-middle">Price: {{ product.price }}</p>
-            </div>
-            <div class="card-footer">
-                <form action="{{ url_for('add_cart') }}" method="post">
-                    <label for='quantity' class="w-50 lb-md">
-                        <input class="float-start form-control mr-2 col-xs-2" type="number" name="quantity"
-                               id='' value="1" min="1" max="{{ product.stock }}">
-                    </label>
-                    <button type="submit" class="float-end btn btn-md btn-warning">Add to Cart</button>
-                    <input type="hidden" name="product_id" value="{{ product.id }}">
-                </form>
-            </div>
+        <!-- Product Image and Name -->
+        <div class="card-body" onclick="window.location.href = '{{ url_for('product_details', product_id=product.id) }}';" style="cursor: pointer;">
+            <img src="{{ url_for('static', filename='images/' + product.image_1) }}" alt="{{ product.name }}" />
+            <h5 class="text-center mt-3">{{ product.name }}</h5>
+        </div>
+
+        <!-- Price Ribbon -->
+        <div class="product-card-footer">
+            Price: {{ product.price }}
+        </div>
+
+        <!-- Quantity and Add to Cart -->
+        <div class="product-card-form">
+            <form action="{{ url_for('add_cart') }}" method="post">
+                <input type="number" name="quantity" value="1" min="1" max="{{ product.stock }}" aria-label="Quantity">
+                <button type="submit" class="btn btn-warning">Add to Cart</button>
+                <input type="hidden" name="product_id" value="{{ product.id }}">
+            </form>
         </div>
     </div>
+</div>
 {% endmacro %}
 
 
 {% block body_block %}
     {% include 'navbar.html' %}
     {% include '_messages.html' %}
+
+    <!-- Link to the stylesheet -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+
+    <div class="container">
+        <div class="categories-grid">
+            <!-- Category Cards -->
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5 class="card-title">Dairy</h5>
+                    <p class="card-text">Fresh dairy products for your everyday needs.</p>
+                    {# <button class="btn btn-primary" onclick="window.location.href = '{{ url_for('category_page', category='dairy') }}';"> #}
+                    <button class="btn btn-primary" disabled>
+                        View Dairy
+                    </button>
+                </div>
+            </div>
+
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5 class="card-title">Vegetables</h5>
+                    <p class="card-text">Fresh and organic vegetables available.</p>
+                    {# <button class="btn btn-primary" onclick="window.location.href = '{{ url_for('category_page', category='vegetables') }}';"> #}
+                    <button class="btn btn-primary" disabled>
+                        View Vegetables
+                    </button>
+                </div>
+            </div>
+
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5 class="card-title">Fruits</h5>
+                    <p class="card-text">Fresh fruits delivered straight to your door.</p>
+                    {# <button class="btn btn-primary" onclick="window.location.href = '{{ url_for('category_page', category='fruits') }}';"> #}
+                    <button class="btn btn-primary" disabled>
+                        View Fruits
+                    </button>
+                </div>
+            </div>
+
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5 class="card-title">Meat and Eggs</h5>
+                    <p class="card-text">Quality meat and fresh eggs for your meals.</p>
+                    {# <button class="btn btn-primary" onclick="window.location.href = '{{ url_for('category_page', category='meat_and_eggs') }}';"> #}
+                    <button class="btn btn-primary" disabled>
+                        View Meat and Eggs
+                    </button>
+                </div>
+            </div>
+
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5 class="card-title">Bread</h5>
+                    <p class="card-text">Freshly baked bread for all your needs.</p>
+                    {# <button class="btn btn-primary" onclick="window.location.href = '{{ url_for('category_page', category='bread') }}';"> #}
+                    <button class="btn btn-primary" disabled>
+                        View Bread
+                    </button>
+                </div>
+            </div>
+
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5 class="card-title">Grains and Pulses</h5>
+                    <p class="card-text">Wide variety of grains and pulses available.</p>
+                    {# <button class="btn btn-primary" onclick="window.location.href = '{{ url_for('category_page', category='grains_and_pulses') }}';"> #}
+                    <button class="btn btn-primary" disabled>
+                        View Grains and Pulses
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="container">
         <div class="row mt-2">

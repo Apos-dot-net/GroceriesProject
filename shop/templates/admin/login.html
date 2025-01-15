@@ -1,24 +1,35 @@
 {% extends 'layout.html' %}
 
 {% block body_block %}
-    <div class="bg-image position-relative" style="background-image: url('{{ url_for('static', filename='admin.jpg') }}');">
-        <div class="overlay overlay-dark"></div> <!-- Add Bootstrap overlay classes -->
+    <div class="bg-image position-relative" style="background-image: url('{{ url_for('static', filename='/images/admin_bg.jpg') }}');
+        background-size: cover; background-position: center; height: 100vh;">
+        <div class="overlay overlay-dark"></div>
         <div class="container">
             {% include '_messages.html' %}
             <div class="row justify-content-center align-items-center vh-100">
                 <div class="col-md-4">
                     <div class="card">
-                        <h1 class="text-center card-header bg-primary text-white">Login</h1>
+                        <div class="card-body bg-transparent text-black text-center">
+                            <h1>Welcome!</h1>
+                            <p class="mt-2">Thank you for being a member of our OneClick family!</p>
+                        </div>
                         <div class="card-body">
                             <form method="POST" enctype="multipart/form-data" action="">
                                 {{ form.csrf_token }}
                                 <div class="mb-3">
-                                    <input type="email" name="email" class="form-control" placeholder="Email" required>
+                                    <input type="email" name="email" class="form-control mb-3" placeholder="Email" required>
                                     <input type="password" name="password" class="form-control" placeholder="Password" required>
                                 </div>
                                 <div class="d-grid">
-                                    <input type="submit" value="Login" class="btn btn-success">
-                                    <a href="{{ url_for('register', user_type='admin') }}" class="btn btn-success mt-2">
+                                    <!-- Login Button (Blue) -->
+                                    <input type="submit" value="Login" class="btn btn-primary mb-3">
+
+                                    <!-- Text Between Buttons -->
+                                    <p class="text-center my-2">or</p>
+                                    <p class="text-center mb-2">Don't have an account? Sign up!</p>
+
+                                    <!-- Sign-up Button (Gray) -->
+                                    <a href="{{ url_for('register', user_type='admin') }}" class="btn btn-secondary">
                                         Sign-up
                                     </a>
                                 </div>

@@ -3,23 +3,84 @@
 {% block body_block %}
     {% include '_messages.html' %}
     {% from "_formhelpers.html" import render_field %}
+
+    <!-- Navbar -->
+    <div class="container-fluid">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark rounded w-100">
+            <a class="navbar-brand text-white" href="/admin">ADMIN</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+                    aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav w-100">
+                    <li class="nav-item">
+                        <button class="btn btn-outline-light me-2" onclick="location.href = '/admin';">Home</button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="btn btn-outline-light me-2" onclick="location.href = '/brands';">Brands</button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="btn btn-outline-light me-2" href="/add/product">Product</button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="btn btn-outline-light me-2" onclick="location.href = '/categories';">Categories</button>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ms-auto d-flex align-items-center">
+                    {% if current_user.is_authenticated %}
+                        <li class="nav-item dropdown">
+                            <a class="btn btn-outline-light dropdown-toggle" href="#" id="profileDropdown" role="button"
+                               data-bs-toggle="dropdown" aria-expanded="false">
+                                Profile
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+                                <li>
+                                    <div class="dropdown-item text-center">
+                                        <img src="{{ url_for('static', filename='admin.jpg') }}" alt="Admin Picture"
+                                             class="rounded-circle mb-2" width="50" height="50">
+                                        <p class="mb-0"><strong>{{ current_user.username }}</strong></p>
+                                    </div>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a class="dropdown-item text-danger" href="{{ url_for('logout', user_type=session['user_type']) }}">Logout</a>
+                                </li>
+                            </ul>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="btn btn-outline-light me-2" href="{{ url_for('login', user_type='customer') }}">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="btn btn-outline-light" href="{{ url_for('register', user_type='customer') }}">Sign In</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Replenish Stock Form -->
     <div class="container">
-        <h1 class="text-center h1 text-danger mt-5">Replenish Stock</h1>
-        <div class="row justify-content-center">
+        <div class="row justify-content-center mt-5">
             <div class="col-md-6">
-                <form method="POST" action="">
-                    {{ form.csrf_token }}
-                    <div class="form-group">
-                        {{ render_field(form.product, class="form-control") }}
-                    </div>
-                    <div class="form-group">
-                        {{ render_field(form.category, class="form-control") }}
-                    </div>
-                    <div class="form-group">
-                        {{ render_field(form.quantity, class="form-control") }}
-                    </div>
-                    <button type="submit" class="btn btn-info mt-2">Replenish</button>
-                </form>
+                <h1 class="text-center h1 text-danger mb-4">Replenish Stock</h1>
+                <div class="card shadow-lg p-4">
+                    <form method="POST" action="">
+                        {{ form.csrf_token }}
+                        <div class="form-group mb-3">
+                            {{ render_field(form.product, class="form-control") }}
+                        </div>
+                        <div class="form-group mb-3">
+                            {{ render_field(form.category, class="form-control") }}
+                        </div>
+                        <div class="form-group mb-3">
+                            {{ render_field(form.quantity, class="form-control") }}
+                        </div>
+                        <button type="submit" class="btn btn-info w-100">Replenish</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
